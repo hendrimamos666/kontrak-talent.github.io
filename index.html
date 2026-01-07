@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Generate Surat PNG</title>
+<link href="https://fonts.googleapis.com/css2?family=Alex+Brush&display=swap" rel="stylesheet">
 
 <script src="https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
@@ -68,9 +69,16 @@ button:hover {
 }
 
 .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 25mm;
+    margin: auto;
+    background: white;
     position: relative;
-    overflow: visible;         /* ⬅️ WAJIB */
+    overflow: hidden;
+    box-sizing: border-box;
 }
+
 
 
 .watermark img {
@@ -173,13 +181,15 @@ h2 {
 
 
 .ttd-otomatis {
-    font-family: cursive;
-    font-size: 38px;
-    height: 40px;          /* ⬅️ kunci tinggi */
-    line-height: 40px;    /* ⬅️ sejajar PNG */
+    font-family: 'Alex Brush', cursive;
+    font-size: 42px;        /* besar & natural */
+    height: 50px;
+    line-height: 50px;
     margin: 0 auto 10px;
     color: #0a2540;
+    letter-spacing: 1px;
 }
+
 
 .nama-ttd {
     font-weight: bold;
@@ -306,34 +316,30 @@ function buatSurat() {
 
 
 function generatePNG() {
-    const original = document.getElementById("surat");
+    const page = document.querySelector(".page");
 
-    // CLONE node (anti tainted)
-    const clone = original.cloneNode(true);
-    clone.style.background = "#ffffff";
-
-    // sembunyikan clone di luar layar
-    clone.style.position = "fixed";
-    clone.style.left = "-9999px";
-    document.body.appendChild(clone);
-
-    html2canvas(clone, {
-        scale: 2,
+    html2canvas(page, {
+        scale: 300 / 96,      // konversi ke 300 DPI
+        width: 794,           // A4 px @96dpi
+        height: 1123,
         backgroundColor: "#ffffff",
-        useCORS: false
+        useCORS: true
     }).then(canvas => {
+
+        // Resize canvas ke A4 PRINT SIZE
+        const finalCanvas = document.createElement("canvas");
+        finalCanvas.width = 2480;
+        finalCanvas.height = 3508;
+
+        const ctx = finalCanvas.getContext("2d");
+        ctx.drawImage(canvas, 0, 0, 2480, 3508);
+
         const link = document.createElement("a");
-        link.download = "surat-kontrak.png";
-        link.href = canvas.toDataURL("image/png");
+        link.download = "surat-kontrak-A4.png";
+        link.href = finalCanvas.toDataURL("image/png");
         link.click();
-        document.body.removeChild(clone);
-    }).catch(err => {
-        console.error(err);
-        alert("Masih ada resource yang tidak aman (gambar/font)");
-        document.body.removeChild(clone);
     });
 }
-
 
 
 
