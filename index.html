@@ -195,6 +195,26 @@ h2 {
     font-weight: bold;
 }
 
+/* Banner header full lebar */
+.banner-header {
+    position: sticky;        /* tetap di atas saat scroll */
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center; /* agar gambar di tengah */
+    z-index: 1000;
+    padding: 10px 0;
+}
+
+.banner-header img {
+    width: 60%;              /* mengecilkan banner */
+    max-width: 1000px;       /* batas maksimal supaya tidak terlalu besar */
+    height: auto;            /* proporsional sesuai rasio 3301x882 */
+    object-fit: contain;     /* mempertahankan proporsi */
+    display: block;
+}
+
+
 
 </style>
 
@@ -203,6 +223,10 @@ h2 {
 <body>
 
 <body>
+<!-- Banner Header -->
+  <div class="banner-header">
+      <img src="banner.png" alt="Banner Header">
+  </div>  
 
 <div class="container">
     <input type="date" id="tanggal">
@@ -347,4 +371,3 @@ function generatePNG() {
 
 </body>
 </html>
-
