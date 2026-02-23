@@ -317,22 +317,33 @@ function buatSurat(){
     document.getElementById("ttdTalent").innerText=nama.split(" ")[0];
 }
 
+
 async function generatePNG(){
     document.getElementById("bannerWeb").style.display="none";
 
-    for(const p of ["page1","page2"]){
-        const c=await html2canvas(document.getElementById(p),{scale:300/96,useCORS:true});
-        const f=document.createElement("canvas");
-        f.width=2480;f.height=3508;
-        f.getContext("2d").drawImage(c,0,0,2480,3508);
-        const a=document.createElement("a");
-        a.download=p+".png";
-        a.href=f.toDataURL("image/png");
-        a.click();
+    const pages = [
+        {id:"page1", name:"surat-halaman-1.png"},
+        {id:"page2", name:"surat-halaman-2.png"}
+    ];
+
+    for(const p of pages){
+        const el = document.getElementById(p.id);
+
+        const canvas = await html2canvas(el,{
+            scale: 3,                 // kualitas tinggi
+            backgroundColor:"#fff",
+            useCORS:true
+        });
+
+        const link = document.createElement("a");
+        link.download = p.name;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
     }
 
     document.getElementById("bannerWeb").style.display="flex";
 }
+
 </script>
 
 </body>
