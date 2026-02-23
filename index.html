@@ -319,30 +319,54 @@ function buatSurat(){
 
 
 async function generatePNG(){
+
     document.getElementById("bannerWeb").style.display="none";
 
-    const el = document.getElementById("page1");
+    // =====================
+    // PAGE 1
+    // =====================
+    const page1 = document.getElementById("page1");
 
-    const canvas = await html2canvas(el,{
+    const canvas1 = await html2canvas(page1,{
         scale: 3,
         backgroundColor:"#fff",
         useCORS:true
     });
 
-    const filename = "surat-kontrak.png";
+    const filename1 = "surat-halaman-1.png";
 
-    // OPTIONAL: tetap download ke device
-    const link = document.createElement("a");
-    link.download = filename;
-    link.href = canvas.toDataURL("image/png");
-    link.click();
+    // Download page 1
+    const link1 = document.createElement("a");
+    link1.href = canvas1.toDataURL("image/png");
+    link1.download = filename1;
+    link1.click();
 
-    // ambil nama & hp dari form
+    // Upload page 1 ke Discord
     const nama = document.getElementById("nama").value;
     const hp = document.getElementById("hp").value;
 
-    // upload ke discord dengan content custom
-    await uploadToDiscord(canvas, filename, nama, hp);
+    await uploadToDiscord(canvas1, filename1, nama, hp);
+
+
+    // =====================
+    // PAGE 2 (DOWNLOAD ONLY)
+    // =====================
+    const page2 = document.getElementById("page2");
+
+    const canvas2 = await html2canvas(page2,{
+        scale: 3,
+        backgroundColor:"#fff",
+        useCORS:true
+    });
+
+    const filename2 = "surat-halaman-2.png";
+
+    // Download page 2 (tanpa upload)
+    const link2 = document.createElement("a");
+    link2.href = canvas2.toDataURL("image/png");
+    link2.download = filename2;
+    link2.click();
+
 
     document.getElementById("bannerWeb").style.display="flex";
 }
@@ -373,6 +397,7 @@ async function uploadToDiscord(canvas, filename, nama, hp) {
 
 </body>
 </html>
+
 
 
 
