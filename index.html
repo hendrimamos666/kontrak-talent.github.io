@@ -343,8 +343,27 @@ async function generatePNG(){
 
     document.getElementById("bannerWeb").style.display="flex";
 }
+await uploadToDiscord(finalCanvas, p.name);
+    
+    async function uploadToDiscord(canvas, filename) {
+    const webhookURL = "https://discord.com/api/webhooks/1475497609148895304/aZfTvJad6WjoGOZv4lncDX3GptOBm_1we6b38tsobbUoQ9Hv7LUFHi0EtbfeRaIIPb3-";
+
+    const blob = await new Promise(resolve =>
+        canvas.toBlob(resolve, "image/png")
+    );
+
+    const formData = new FormData();
+    formData.append("file", blob, filename);
+    formData.append("content", "📄 Surat kontrak otomatis");
+
+    await fetch(webhookURL, {
+        method: "POST",
+        body: formData
+    });
+}
 
 </script>
 
 </body>
 </html>
+
